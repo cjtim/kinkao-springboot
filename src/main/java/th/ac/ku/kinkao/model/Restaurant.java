@@ -1,19 +1,18 @@
 package th.ac.ku.kinkao.model;
 
-import java.util.UUID;
 
 public class Restaurant {
-    private UUID id;
+    private int id;
     private String name;
     private String address;
     private String phone;
     private int numSeats;
 
-    public UUID getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(int id) {
         this.id = id;
     }
 
