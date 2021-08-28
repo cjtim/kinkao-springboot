@@ -1,0 +1,68 @@
+project:
+  name: kinkao
+  version: 1.0.0
+  description: "Kinkao Springboot"
+  website: "https://github.com/cjtim/kinkao-springboot"
+  docsUrl: "https://github.com/cjtim/kinkao-springboot"
+  license: Apache-2.0
+  authors:
+    - cjtim
+  java:
+    mainClass: th.ac.ku.kinkao.KinkaoApplication
+    groupId: th.ac.ku
+    artifactId: kinkao
+    version: 16
+
+release:
+  github:
+    overwrite: true
+    branch: master
+    changelog:
+      formatted: ALWAYS
+      format: '- {{commitShortHash}} {{commitTitle}}'
+      contributors:
+        enabled: false
+      labelers:
+        - label: 'merge_pull'
+          title: 'Merge pull'
+        - label: 'merge_branch'
+          title: 'Merge branch'
+        - label: 'feature'
+          title: 'Resolves #'
+          body: 'Resolves #'
+        - label: 'issue'
+          title: 'Fixes #'
+          body: 'Fixes #'
+        - label: 'issue'
+          title: 'Relates to #'
+          body: 'Relates to #'
+        - label: 'task'
+          title: '[chore]'
+        - label: 'dependencies'
+          title: '[deps]'
+      # Categorize commits by labels
+      categories:
+        - title: 'Merge'
+          labels:
+            - 'merge_pull'
+            - 'merge_branch'
+        - title: '🚀 Features'
+          labels:
+            - 'feature'
+        - title: '✅ Issues'
+          labels:
+            - 'issue'
+        - title: '🧰 Tasks'
+          labels:
+            - 'task'
+        - title: '⚙️  Dependencies'
+          labels:
+            - 'dependencies'
+      hide:
+        categories:
+          - 'Merge'
+      replacers:
+        # Remove `[chore] ` from the commit message
+        - search: '\[chore\] '
+        # Remove `[deps] ` from the commit message
+        - search: '\[deps\] '
