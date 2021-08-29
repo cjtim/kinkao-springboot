@@ -34,6 +34,8 @@ jobs:
       matrix:
         os: [ macos-latest, windows-latest, ubuntu-latest ]
     steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
       - name: Setup Java for JReleaser
         uses: actions/setup-java@v1
         with:
@@ -48,6 +50,8 @@ jobs:
     if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
       - name: Setup Java for JReleaser
         uses: actions/setup-java@v1
         with:
