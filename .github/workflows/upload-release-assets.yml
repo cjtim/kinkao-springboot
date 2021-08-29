@@ -1,0 +1,31 @@
+# This is a basic workflow to help you get started with Actions
+name: update-release-assets
+# Controls when the action will run.
+on: [ release ]
+
+env:
+  JAR_NAME: kinkao-0.0.1-SNAPSHOT.jar
+  
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: my-artifact
+
+      - name: Rename file
+        run: |
+          mv kinkao-macos-latest/${{ env.JAR_NAME }} kinkao-macos-latest.jar
+          mv kinkao-ubuntu-latest/${{ env.JAR_NAME }} kinkao-ubuntu-latest.jar
+          mv kinkao-windows-latest/${{ env.JAR_NAME }} kinkao-windows-latest.jar
+
+      - uses: shogo82148/actions-upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: "*.jar"
+
