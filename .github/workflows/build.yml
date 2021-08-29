@@ -71,8 +71,8 @@ jobs:
 #        env:
 #          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Get Current jreleaser version
-        run: ->
-          echo "TAG=`cat jreleaser.yml | sed -n 's/version: \(.*\)/\1/p' | head -n1`" >> $GITHUB_ENV
+        run: |
+          echo "TAG=$(cat jreleaser.yml | sed -n 's/version: \(.*\)/\1/p' | head -n1)" >> $GITHUB_ENV
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
