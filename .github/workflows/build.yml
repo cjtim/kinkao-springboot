@@ -68,10 +68,14 @@ jobs:
       - name: Get Current jreleaser version
         run: |
           export TAG=`cat jreleaser.yml | sed -n 's/version: \(.*\)/\1/p' | head -n1`
+          echo $TAG
       - name: Release
         uses: softprops/action-gh-release@v1
         if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
         with:
-          tag_name: ${{ env.TAG }}
-          files: target
+          tag_name: 1.0.0
+          files: |
+            kinkao-macos-latest
+            kinkao-ubuntu-latest
+            kinkao-windows-latest
 
