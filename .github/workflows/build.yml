@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-docker:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
@@ -22,20 +22,38 @@ jobs:
       - name: Build container image
         uses: docker/build-push-action@v2
         with:
-          context: ./
-          file: ./Dockerfile
+          context: .
+          file: Dockerfile
           push: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
           tags: |
             ghcr.io/${{ github.repository }}:${{ github.sha }}
             ghcr.io/${{ github.repository }}:latest
-
+  build-jar:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ macos-latest, windows-latest, ubuntu-latest ]
+    steps:
       - name: Setup Java for JReleaser
         uses: actions/setup-java@v1
-        if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
+        with:
+          java-version: 11
+      - name: Build Jar file
+        run: mvn -f pom.xml clean package
+      - uses: actions/upload-artifact@v2
+        with:
+          name: kinkao-${{ matrix.os }}
+          path: target/*.jar
+  release:
+    if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Java for JReleaser
+        uses: actions/setup-java@v1
         with:
           java-version: 11
       - name: Run JReleaser
         uses: jreleaser/release-action@v1
-        if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
         env:
           JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
