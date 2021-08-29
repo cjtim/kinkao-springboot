@@ -3,7 +3,7 @@ name: build
 # Controls when the action will run.
 on:
   push:
-    branches: [master, main]
+    branches: [ master, main ]
   pull_request:
   workflow_dispatch:
 
@@ -47,17 +47,31 @@ jobs:
           name: kinkao-${{ matrix.os }}
           path: target/*.jar
   release:
-    if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
+    needs: [ build-docker, build-jar ]
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v2
+      - name: Display structure of downloaded files
+        run: ls -R
       - name: Setup Java for JReleaser
         uses: actions/setup-java@v1
         with:
           java-version: 11
       - name: Run JReleaser
         uses: jreleaser/release-action@v1
+        if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
         env:
           JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get Current jreleaser version
+        run: |
+          export TAG=`cat jreleaser.yml | sed -n 's/version: \(.*\)/\1/p' | head -n1`
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
+        with:
+          tag_name: ${{ env.TAG }}
+          files: target
 
