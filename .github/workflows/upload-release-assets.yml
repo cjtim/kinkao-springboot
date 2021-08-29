@@ -12,6 +12,9 @@ env:
 
 jobs:
   release:
+    strategy:
+      matrix:
+        os: [ macos-latest, ubuntu-latest ]
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
@@ -20,13 +23,11 @@ jobs:
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v2
         with:
-          name: my-artifact
+          name: kinkao-${{ matrix.os }}
 
       - name: Rename file
         run: |
-          mv kinkao-macos-latest/${{ env.JAR_NAME }} kinkao-macos-latest.jar
-          mv kinkao-ubuntu-latest/${{ env.JAR_NAME }} kinkao-ubuntu-latest.jar
-          mv kinkao-windows-latest/${{ env.JAR_NAME }} kinkao-windows-latest.jar
+          mv kinkao-${{ matrix.os }}/${{ env.JAR_NAME }} kinkao-${{ matrix.os }}.jar
 
       - uses: shogo82148/actions-upload-release-asset@v1
         with:
