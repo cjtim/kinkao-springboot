@@ -7,8 +7,6 @@ on:
   pull_request:
   workflow_dispatch:
 
-env:
-  JAR_NAME: kinkao-0.0.1-SNAPSHOT.jar
 jobs:
   build-docker:
     runs-on: ubuntu-latest
@@ -48,37 +46,19 @@ jobs:
         with:
           name: kinkao-${{ matrix.os }}
           path: target/*.jar
+
   release:
     needs: [ build-docker, build-jar ]
     runs-on: ubuntu-latest
+#    if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
-      - name: Download all workflow run artifacts
-        uses: actions/download-artifact@v2
-      - name: Rename file
-        run: |
-          mv kinkao-macos-latest/${{ env.JAR_NAME }} kinkao-macos-latest.jar
-          mv kinkao-ubuntu-latest/${{ env.JAR_NAME }} kinkao-ubuntu-latest.jar
-          mv kinkao-windows-latest/${{ env.JAR_NAME }} kinkao-windows-latest.jar
-#      - name: Setup Java for JReleaser
-#        uses: actions/setup-java@v1
-#        with:
-#          java-version: 11
-#      - name: Run JReleaser
-#        uses: jreleaser/release-action@v1
-#        if: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' }}
-#        env:
-#          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Get Current jreleaser version
-        run: |
-          echo "TAG=$(cat jreleaser.yml | sed -n 's/version: \(.*\)/\1/p' | head -n1)" >> $GITHUB_ENV
-      - name: Release
-        uses: softprops/action-gh-release@v1
+      - name: Setup Java for JReleaser
+        uses: actions/setup-java@v1
         with:
-          tag_name: ${{ env.TAG }}
-          files: |
-            kinkao-macos-latest.jar
-            kinkao-ubuntu-latest.jar
-            kinkao-windows-latest.jar
-
+          java-version: 11
+      - name: Run JReleaser
+        uses: jreleaser/release-action@v1
+        env:
+          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
