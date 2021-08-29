@@ -1,11 +1,15 @@
 # This is a basic workflow to help you get started with Actions
 name: update-release-assets
 # Controls when the action will run.
-on: [ release ]
+on:
+  release:
+    types:
+      - created
+  workflow_dispatch:
 
 env:
   JAR_NAME: kinkao-0.0.1-SNAPSHOT.jar
-  
+
 jobs:
   release:
     runs-on: ubuntu-latest
