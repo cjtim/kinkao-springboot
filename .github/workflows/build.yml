@@ -58,8 +58,8 @@ jobs:
         uses: actions/download-artifact@v2
       - name: Rename file
         run: |
-          mv kinkao-macos-latest/${{ env.JAR_NAME }} kinkao-macos-latest.jar \
-          mv kinkao-ubuntu-latest/${{ env.JAR_NAME }} kinkao-ubuntu-latest.jar \
+          mv kinkao-macos-latest/${{ env.JAR_NAME }} kinkao-macos-latest.jar
+          mv kinkao-ubuntu-latest/${{ env.JAR_NAME }} kinkao-ubuntu-latest.jar
           mv kinkao-windows-latest/${{ env.JAR_NAME }} kinkao-windows-latest.jar
 #      - name: Setup Java for JReleaser
 #        uses: actions/setup-java@v1
